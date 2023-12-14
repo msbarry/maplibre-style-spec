@@ -4,10 +4,10 @@ import type {GlobalProperties, Feature, FeatureState} from './index';
 import {ICanonicalTileID} from '../tiles_and_coordinates';
 
 const geometryTypes = ['Unknown', 'Point', 'LineString', 'Polygon'];
-
+let id = 0;
 class EvaluationContext {
     globals: GlobalProperties;
-    feature: Feature;
+    _feature: Feature;
     featureState: FeatureState;
     formattedSection: FormattedSection;
     availableImages: Array<string>;
@@ -51,6 +51,13 @@ class EvaluationContext {
             cached = this._parseColorCache[input] = Color.parse(input) as Color;
         }
         return cached;
+    }
+    set feature(feature: Feature) {
+        if (feature) feature._id = feature._id || ++id;
+        this._feature = feature;
+    }
+    get feature() {
+        return this._feature;
     }
 }
 

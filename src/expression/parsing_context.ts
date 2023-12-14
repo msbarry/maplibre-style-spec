@@ -9,11 +9,15 @@ import EvaluationContext from './evaluation_context';
 import type {Expression, ExpressionRegistry} from './expression';
 import type {Type} from './types';
 
+const cache: {[_: string]: Expression} = {};
+
 /**
  * State associated parsing at a given point in an expression tree.
  * @private
  */
 class ParsingContext {
+    id: number = 0;
+    mapping: {[_: string]: number};
     registry: ExpressionRegistry;
     path: Array<number>;
     key: string;
@@ -30,6 +34,7 @@ class ParsingContext {
      * Internal delegate to inConstant function to avoid circular dependency to CompoundExpression
      */
     private _isConstant: (expression: Expression)=> boolean;
+    private _keyBase: string;
 
     constructor(
         registry: ExpressionRegistry,
@@ -46,6 +51,7 @@ class ParsingContext {
         this.errors = errors;
         this.expectedType = expectedType;
         this._isConstant = isConstantFunc;
+        this._keyBase = JSON.stringify([expectedType]);
     }
 
     /**
@@ -145,7 +151,8 @@ class ParsingContext {
                     }
                 }
 
-                return parsed;
+                const key = this._keyBase + JSON.stringify([options, expr]);
+                return cache[key] || (cache[key] = parsed);
             }
 
             return this.error(`Unknown expression "${op}". If you wanted a literal array, use ["literal", [...]].`, 0) as null;

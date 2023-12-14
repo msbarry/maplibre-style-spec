@@ -42,6 +42,7 @@ export type Feature = {
         };
     };
     readonly geometry?: Array<Array<Point2D>>;
+    _id?: number;
 };
 
 export type FeatureState = {[_: string]: any};

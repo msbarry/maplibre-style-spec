@@ -30,6 +30,8 @@ class CompoundExpression implements Expression {
     type: Type;
     _evaluate: Evaluate;
     args: Array<Expression>;
+    lastId: number = -1;
+    lastValue: any = null;
 
     static definitions: {[_: string]: Definition};
 
@@ -41,7 +43,11 @@ class CompoundExpression implements Expression {
     }
 
     evaluate(ctx: EvaluationContext) {
-        return this._evaluate(ctx, this.args);
+        if (this.lastId === ctx._feature._id) {
+            return this.lastValue;
+        }
+        this.lastId = ctx._feature._id;
+        return (this.lastValue = this._evaluate(ctx, this.args));
     }
 
     eachChild(fn: (_: Expression) => void) {

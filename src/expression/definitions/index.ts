@@ -493,6 +493,11 @@ CompoundExpression.register(expressions, {
                 (ctx, [a, b]) => a.evaluate(ctx) && b.evaluate(ctx)
             ],
             [
+                [BooleanType, BooleanType, BooleanType],
+                (ctx, [a, b, c]) =>
+                    a.evaluate(ctx) && b.evaluate(ctx) && c.evaluate(ctx)
+            ],
+            [
                 varargs(BooleanType),
                 (ctx, args) => {
                     for (const arg of args) {
@@ -510,6 +515,11 @@ CompoundExpression.register(expressions, {
             [
                 [BooleanType, BooleanType],
                 (ctx, [a, b]) => a.evaluate(ctx) || b.evaluate(ctx)
+            ],
+            [
+                [BooleanType, BooleanType, BooleanType],
+                (ctx, [a, b, c]) =>
+                    a.evaluate(ctx) || b.evaluate(ctx) || c.evaluate(ctx)
             ],
             [
                 varargs(BooleanType),

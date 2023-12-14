@@ -66,6 +66,9 @@ function makeComparison(op: ComparisonOperator, compareBasic, compareWithCollato
         rhs: Expression;
         collator: Expression;
         hasUntypedArgument: boolean;
+        op = op;
+        lastId: number = -1;
+        lastValue: any = null;
 
         constructor(lhs: Expression, rhs: Expression, collator?: Expression | null) {
             this.type = BooleanType;
@@ -129,6 +132,13 @@ function makeComparison(op: ComparisonOperator, compareBasic, compareWithCollato
         }
 
         evaluate(ctx: EvaluationContext) {
+            if (this.lastId === ctx._feature._id) {
+                return this.lastValue;
+            }
+            return (this.lastValue = this._evaluate(ctx));
+        }
+
+        _evaluate(ctx: EvaluationContext) {
             const lhs = this.lhs.evaluate(ctx);
             const rhs = this.rhs.evaluate(ctx);
 

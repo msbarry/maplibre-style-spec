@@ -21,6 +21,8 @@ class Match implements Expression {
     cases: Cases;
     outputs: Array<Expression>;
     otherwise: Expression;
+    lastId: number = -1;
+    lastValue: any = null;
 
     constructor(inputType: Type, outputType: Type, input: Expression, cases: Cases, outputs: Array<Expression>, otherwise: Expression) {
         this.inputType = inputType;
@@ -99,6 +101,13 @@ class Match implements Expression {
     }
 
     evaluate(ctx: EvaluationContext) {
+        if (this.lastId === ctx._feature._id) {
+            return this.lastValue;
+        }
+        return (this.lastValue = this._evaluate(ctx));
+    }
+
+    _evaluate(ctx: EvaluationContext) {
         const input = (this.input.evaluate(ctx) as any);
         const output = (typeOf(input) === this.inputType && this.outputs[this.cases[input]]) || this.otherwise;
         return output.evaluate(ctx);

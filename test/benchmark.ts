@@ -27,10 +27,10 @@ async function addTest(name, z, x, y) {
     }
     suite.add(`evaluate expressions ${name}`, () => {
         let num = 0;
-        const context: EvaluationContext = new EvaluationContext();
-        for (const layer of layers) {
-            for (const feature of features) {
-                context.feature = feature;
+        for (const feature of features) {
+            const context: EvaluationContext = new EvaluationContext();
+            context.feature = feature;
+            for (const layer of layers) {
                 if (layer.evaluate(context)) {
                     num++;
                 }
