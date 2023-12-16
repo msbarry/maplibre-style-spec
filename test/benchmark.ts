@@ -27,6 +27,10 @@ async function addTest(name, z, x, y) {
     }
     suite.add(`evaluate expressions ${name}`, () => {
         let num = 0;
+        // optimization only works when you run each layer's filter sequentially over a feature
+        // maplibre does for each layer: for each feature though, so would need to refactor
+        // to do for each feature: for each layer:
+        // https://github.com/maplibre/maplibre-gl-js/compare/main...msbarry:maplibre-gl-js:faster-filter?expand=1#diff-1f1f697b03fde8a8e144b3ebad0d666cbff3dc897b1f3d066bfdf5822b779b66R128
         for (const feature of features) {
             const context: EvaluationContext = new EvaluationContext();
             context.feature = feature;
